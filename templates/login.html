@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer> </script>
+{% endblock %}
+
+{% block content %}
+
+<!-- GOOGLE SIGN IN-->
+<div id="signinButton">
+    <span class="g-signin"
+      data-scope="openid email"
+      data-clientid="535565789346-qbsfq16dcdga2uoo36tltdf0c42n1kpg.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+</div>
+    <div id="result"></div>
+
+<!-- FACEBOOK SIGN IN-->
+
+<div class= "button">
+    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+    <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+    </fb:login-button>
+</div>
+
+<script>
+function signInCallback(authResult) {
+if (authResult['code']) {
+
+  // Hide the sign-in button now that the user is authorized
+  $('#signinButton').attr('style', 'display: none');
+
+  // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+  $.ajax({
+    type: 'POST',
+    url: '/gconnect?state={{STATE}}',
+    processData: false,
+    data: authResult['code'],
+    contentType: 'application/octet-stream; charset=utf-8',
+    success: function(result) {
+      // Handle or verify the server response if necessary.
+      if (result) {
+        $('#result').html(result)
+       setTimeout(function() {
+        window.location.href = "/"
+       }, 4000);
+
+
+    } else if (authResult['error']) {
+
+  console.log('There was an error: ' + authResult['error']);
+} else {
+      $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+       }
+
+    }
+
+}); } }
+</script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '2054264781479206',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v3.0'
+    });
+
+    FB.AppEvents.logPageView();
+    };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+   function sendTokenToServer() {
+        console.log('Welcome!  Fetching your information.... ');
+    FB.login(function(response){
+        FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{STATE}}',
+                processData: false,
+                data: access_token,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+
+                    // Handle or verify the server response if necessary.
+                    if (result) {
+                        $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 4000);
+                    } else {
+                    $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                }
+            });
+        });
+    }, {scope: 'email, public_profile'});
+    };
+
+</script>
+
+{% endblock %}

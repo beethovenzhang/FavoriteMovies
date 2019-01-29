@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Update Item{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+               <h1>Update Film {{ item.name }}</h1>
+
+               <form method="POST">
+                    <div class="form-group">
+                      <label for="name">Name</label>
+                      <input name="name" type="text" id= "name" value="{{ item.name }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="category">Category</label>
+                      <select name="category" id="category" >
+                        {% for category in categories %}
+                          <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>                          
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea name="description" id="description" rows="6">{{item.description}}</textarea>
+                    </div>
+
+                    <button type="submit">Update</button>
+                    <a href="{{ url_for('home') }}"><button type="button">Cancel</button></a>
+                  </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

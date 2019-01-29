@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container sections">
+    <div class="row">
+      <div class="col-md-12">
+          <h1>Welcome to Favourite Film App!</h1>
+      </div>
+    </div>
+    {% if 'username' in session %}
+    <div class="row">
+      <div class="col-md-12">
+        <a href="{{ url_for('add_category') }}">Add Category</a>
+        <a href="{{ url_for('add_item') }}">Add Film</a>
+      </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container sections">
+    <div class="row">
+        <div class="col-md-4"">
+            <h2>Category</h2>
+            {% for category in categories %}
+                <a href="{{ url_for('show_items_in_category', category_id=category.id) }}">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="offset-md-1"></div>
+        <div class="col-md-7">
+            <h2>Latest Films</h2>
+            {% for item in items %}
+                <a href="{{ url_for('view_item', item_id=item.id) }}">{{ item.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

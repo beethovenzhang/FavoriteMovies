@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}All Items{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row" >
+                <h1>{{ item.name }}</h1>
+            </div>
+            <div class="row">
+                <h3>{{ category.name }}</h3>
+            </div>
+            <div class="row">
+                <p>{{ item.description }}</p>
+            </div>
+            {% if 'username' in session %}
+            <div class="row">
+                <form>
+                    <a href="{{ url_for('edit_item', item_id=item.id) }}">Edit</a>
+                    <a href="{{ url_for('delete_item', item_id=item.id) }}">Delete</a>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

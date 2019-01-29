@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %} | Favourite Film App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Roboto:400,300,700'>
+    <link rel="stylesheet"
+          href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous">
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="container header">
+        <div class="row" class="text-left">
+            <div class="col-md-6">
+                <a href="{{url_for('home')}}">Item Catalog</a>
+            </div>
+            <div class="col-md-3 col-offset-3">
+                {%if 'username' not in session %}
+                    <a href="{{url_for('login')}}"> Login </a>
+                {% else %}
+                    <p>Logged in as <strong>{{ session['username'] }}</strong></p>
+                    <a href="{{url_for('logout')}}">Logout </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="message">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>{% for message in messages %}
+                        <div class="flash">
+                            <li><strong> {{ message }} </strong></li>
+                        </div>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
+
+

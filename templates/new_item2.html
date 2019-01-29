@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Add Film{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+               <h1>Create new film for the category {{ category.name }}</h1>
+               <form method="POST">
+                    <div class="form-group">
+                      <label for="name">Name</label>
+                      <input name="name" type="text" class="form-control" id="name">
+                    </div>              
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea name="description" id="description" rows="6"></textarea>
+                    </div>
+                    <button type="submit">Submit</button>
+                    <a href="{{ url_for('show_items_in_category', category_id=category.id) }}"><button type="button" >Cancel</button></a>
+                  </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
