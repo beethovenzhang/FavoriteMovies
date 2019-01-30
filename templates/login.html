@@ -7,7 +7,8 @@
 {% block content %}
 
 <!-- GOOGLE SIGN IN-->
-<div id="signinButton">
+<div id="signinButton"
+    style="text-align:center">
     <span class="g-signin"
       data-scope="openid email"
       data-clientid="1031275608901-42od0im5pcokdv7qps6m1r1posoc2tea.apps.googleusercontent.com"
@@ -20,13 +21,7 @@
 </div>
     <div id="result"></div>
 
-<!-- FACEBOOK SIGN IN-->
 
-<div class= "button">
-    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-    <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-    </fb:login-button>
-</div>
 
 <script>
 function signInCallback(authResult) {
@@ -62,7 +57,7 @@ if (authResult['code']) {
 
 }); } }
 </script>
-<script>
+<!-- <script>
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '231353157805018',
@@ -110,6 +105,6 @@ if (authResult['code']) {
     }, {scope: 'email, public_profile'});
     };
 
-</script>
+</script> -->
 
 {% endblock %}

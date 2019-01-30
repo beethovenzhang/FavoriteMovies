@@ -150,84 +150,14 @@ def gconnect():
     output += '!</h2>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 250px; height: 250px; '
+    output += ' " style="width: 250px; height: 250px; '
     output += 'border-radius: 150px;'
     output += '-webkit-border-radius: 150px;-moz-border-radius: 150px;">'
     flash("You are now logged in as %s!" % login_session['username'])
     print("Done!")
     return output
 
-# Facebook account to log in
 
-# Connect to facebook login.
-
-
-@app.route('/fbconnect', methods=['POST'])
-def fbconnect():
-    """Click the Facebook Log-in Button and check whether the user have the same
-     token or not."""
-    if request.args.get('state') != login_session['state']:
-        response = make_response(json.dumps('Invalid state parameter.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    """If it is true,store the value of request'date into Variable code"""
-    access_token = request.data
-
-    """Exchange client token for long-lived server-side token."""
-    app_id = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_id']
-    app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = ('https://graph.facebook.com/v2.10/oauth/access_token?grant_type'
-           '=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token='
-           '%s') % (app_id, app_secret, access_token)
-    http = httplib2.Http()
-    result = http.request(url, 'GET')[1]
-    data = json.loads(result)
-
-    """Extract the access token from response and compose the variable token."""
-    token = 'access_token=' + data['access_token']
-
-    """Use token to get user info from API."""
-    url = 'https://graph.facebook.com/v2.10/me?%s&fields=name,id,email' % token
-    http = httplib2.Http()
-    result = http.request(url, 'GET')[1]
-    data = json.loads(result)
-
-    login_session['provider'] = 'facebook'
-    login_session['username'] = data["name"]
-    login_session['email'] = data["email"]
-    login_session['facebook_id'] = data["id"]
-
-    """Stored the access_token in the login_session"""
-    stored_token = token.split("=")[1]
-    login_session['access_token'] = stored_token
-
-    """Get user picture."""
-    url = ('https://graph.facebook.com/v2.10/me/picture?%s&redirect=0&height='
-           '200&width=200') % token
-    http = httplib2.Http()
-    result = http.request(url, 'GET')[1]
-    data = json.loads(result)
-    login_session['picture'] = data["data"]["url"]
-
-    """Check whether login user of google has been existed in database or not.
-    If not, create a new user.And assign the user_id to the variable
-    login_session."""
-    user_id = get_user_id(login_session['email'])
-    if not user_id :
-        user_id = create_user(login_session)
-    login_session['user_id'] = user_id
-    """Show a welcome screen about successful login."""
-    output = ''
-    output += '<h4>Welcome, '
-    output += login_session['username']
-    output += '!</h4>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style="width: 250px; height: 250px;"> '
-    flash("You are now logged in as %s" % login_session['username'])
-    return output
 
 # Google account Logout Handling
 # Revoke a current user's token and reset their login_session.
@@ -259,31 +189,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-# Facebook account Logout Handling
 
-# Revoke a current user's token and reset their login_session.
-
-
-def fbdisconnect():
-    facebook_id = login_session['facebook_id']
-    """Delete the access_token and facebook_id of logged_in account via API"""
-    access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % \
-          (facebook_id, access_token)
-    h = httplib2.Http()
-    result = h.request(url, 'DELETE')[1]
-    """If the returned instance of Response's key 'status' is '200',it means
-    successfully disconnect .If the returned instance of Response's key 'status'
-    is '400',it means failed to disconnect."""
-    if result['status'] == '200':
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    else:
-        response = make_response(
-            json.dumps('Failed to revoke token for given user.'), 400)
-        response.headers['Content-Type'] = 'application/json'
-        return response
 
 # Logout handling
 
@@ -296,9 +202,6 @@ def logout():
             gdisconnect()
             if 'google_id' in login_session:
                 del login_session['google_id']
-        if login_session['provider'] == 'facebook':
-            fbdisconnect()
-            del login_session['facebook_id']
         del login_session['access_token']
         del login_session['username']
         del login_session['email']

@@ -1,9 +1,9 @@
 body {
-    background: #f0f8ff;
+    background: #FFFFFF;
 }
 
 .header {
-    background-color: #A5D6D9;
+    background-color: #00FFFF;
 }
 
 .header a{
@@ -31,7 +31,7 @@ body {
 
 strong {
  	font-size: 16px;
- 	color: #1A1919;
+ 	color: #fe0d21;
  	line-height: 24px;
 }
 
