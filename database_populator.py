@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
 """Create a new class engine instance."""
-engine = create_engine('sqlite:///filmcatalog.db')
+engine = create_engine('sqlite:///moviecatalog.db')
 
 """make the above engine associated with Session objects."""
 Session = sessionmaker(bind=engine)
@@ -14,17 +14,16 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 user1 = User(
-    name='lubo',
-    email='lubocsu@gmail.com',
-    picture='https://gss0.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/'
-            'zhidao/pic/item/b03533fa828ba61efd56af434b34970a304e5925.jpg'
+    name='Yunfei',
+    email='beethovenzhang@gmail.com',
+    picture=''
 )
 
 session.add(user1)
 session.commit()
 
 category1 = Category(
-    name='Action',
+    name='Science Fiction',
     user=user1
 )
 
@@ -32,9 +31,11 @@ session.add(category1)
 session.commit()
 
 item1 = Item(
-    name='Incredibles2',
-    description='Bob Parr (Mr. Incredible) is left to care for the kids while '
-                'Helen (Elastigirl) is out saving the world.',
+    name='The Avengers',
+    description='Earth mightiest heroes must come together and learn to'
+                'fight as a team if they are going to stop the mischievous'
+                'Loki and his alien army from enslaving humanity. ',
+
     category=category1,
     user=user1
 )

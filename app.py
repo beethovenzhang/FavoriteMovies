@@ -22,7 +22,7 @@ app = Flask(__name__)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 # Create a new class engine instance.
-engine = create_engine('sqlite:///filmcatalog.db',
+engine = create_engine('sqlite:///moviecatalog.db',
                        connect_args={'check_same_thread': False})
 # Make the above engine associated with Session objects.
 Session = sessionmaker(bind=engine)
@@ -68,7 +68,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    """Send the access_token to google server to check and receive the response 
+    """Send the access_token to google server to check and receive the response
     from google server. """
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
@@ -81,7 +81,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    """ Verify that the google_id of access token is the same as user_id 
+    """ Verify that the google_id of access token is the same as user_id
     of google."""
     google_id = credentials.id_token['sub']
     if result['user_id'] != google_id:
@@ -100,12 +100,12 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    """If user has logged in,the value of login_session['access_token'] and 
-    login_session['google_id'] have been assigned.Whether the variables of 
-    stored_access_token and stored_google_id have been assigned or not depends 
-    on whether login_session['access_token'] and login_session['google_id'] have 
-    been assigned or not.If stored_access_token is not None and the value of 
-    google_id is the same as login_session['google_id'],it means that current 
+    """If user has logged in,the value of login_session['access_token'] and
+    login_session['google_id'] have been assigned.Whether the variables of
+    stored_access_token and stored_google_id have been assigned or not depends
+    on whether login_session['access_token'] and login_session['google_id'] have
+    been assigned or not.If stored_access_token is not None and the value of
+    google_id is the same as login_session['google_id'],it means that current
     user has been logged in.Then it return the message to the client."""
 
     stored_access_token = login_session.get('access_token')
@@ -115,28 +115,28 @@ def gconnect():
             json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
-    """If all the 'if clauses'above haven't been matched,it means that the 
+    """If all the 'if clauses'above haven't been matched,it means that the
     login of google account succeed.Then store the access_token and google_id in
     the login_session."""
     login_session['access_token'] = credentials.access_token
     login_session['google_id'] = google_id
 
-    """Store the user information in the variable answer by requesting the 
+    """Store the user information in the variable answer by requesting the
     google server."""
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-    """Assign the value of json-encoded content of variable answer to the 
+    """Assign the value of json-encoded content of variable answer to the
     variable data."""
     data = answer.json()
-    """Assign the user information of variable data to the variable 
+    """Assign the user information of variable data to the variable
     login_session."""
     login_session['provider'] = 'google'
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
     """Check whether login user of google has been existed in database or not.
-    If not, create a new user.And assign the user_id to the variable 
+    If not, create a new user.And assign the user_id to the variable
     login_session."""
     user_id = get_user_id(data["email"])
     if not user_id:
@@ -212,7 +212,7 @@ def fbconnect():
     login_session['picture'] = data["data"]["url"]
 
     """Check whether login user of google has been existed in database or not.
-    If not, create a new user.And assign the user_id to the variable 
+    If not, create a new user.And assign the user_id to the variable
     login_session."""
     user_id = get_user_id(login_session['email'])
     if not user_id :
@@ -246,7 +246,7 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    """If the returned instance of Response's key 'status' is '200',it means 
+    """If the returned instance of Response's key 'status' is '200',it means
     successfully disconnect .If the returned instance of Response's key 'status'
     is '400',it means failed to disconnect."""
     if result['status'] == '200':
@@ -272,7 +272,7 @@ def fbdisconnect():
           (facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    """If the returned instance of Response's key 'status' is '200',it means 
+    """If the returned instance of Response's key 'status' is '200',it means
     successfully disconnect .If the returned instance of Response's key 'status'
     is '400',it means failed to disconnect."""
     if result['status'] == '200':
@@ -653,4 +653,4 @@ def categories_json():
 
 if __name__ == "__main__":
     app.secret_key = 'super_secret_key'
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, threaded=True)
