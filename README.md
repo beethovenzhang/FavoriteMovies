@@ -44,7 +44,7 @@ This Favorite Movies App is a web application that allows users to login in with
    ```bash
    cd /vagrant
    ```
-6.Change the current directory to the `fullstack/vagrant/catalog` 
+6.Change the current directory to the `fullstack/vagrant/catalog`
 
 7.Install and update **pip** module.
    ```bash
@@ -92,6 +92,7 @@ This Favorite Movies App is a web application that allows users to login in with
 - Implement other third party logins and possibly a local registration and authentication system.
 
 ## Notice
+- This application has a JSON endpoint: `localhost:5000/show/categories/JSON`.
 - Some of the code are from previous projects.
 - The version of Flask 1.x is necessary.
 - The version of Python 3.6.x is necessary.
