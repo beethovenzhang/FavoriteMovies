@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}{% endblock %} | Favourite Movie App</title>
+    <title>{% block title %}{% endblock %} | Favourite Movies App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Roboto:400,300,700'>
     <link rel="stylesheet"
@@ -25,14 +25,14 @@
     <div class="container header">
         <div class="row" class="text-left">
             <div class="col-md-6">
-                <a href="{{url_for('home')}}">Item Catalog</a>
+                <a href="{{url_for('home')}}"><b>Favorite Movies</b></a>
             </div>
-            <div class="col-md-3 col-offset-3">
+            <div style="text-align:right">
                 {%if 'username' not in session %}
-                    <a href="{{url_for('login')}}"> Login </a>
+                    <a href="{{url_for('login')}}"> <b>Login</b> </a>
                 {% else %}
-                    <p>Logged in as <strong>{{ session['username'] }}</strong></p>
-                    <a href="{{url_for('logout')}}">Logout </a>
+                    <p>Logged in as <b>{{ session['username'] }}</b></p>
+                    <a href="{{url_for('logout')}}"><b>Logout</b> </a>
                 {% endif %}
             </div>
         </div>
