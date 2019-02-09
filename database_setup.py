@@ -69,6 +69,6 @@ class Item(Base):
 
 
 """Create a new :class:`.Engine` instance."""
-engine = create_engine('sqlite:///moviecatalog.db')
+engine = create_engine('postgresql://catalog:0000@localhost/catalog')
 """Create all tables stored in this metadata."""
 Base.metadata.create_all(engine)

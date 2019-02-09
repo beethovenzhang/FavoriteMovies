@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
 """Create a new class engine instance."""
-engine = create_engine('sqlite:///moviecatalog.db')
+engine = create_engine('postgresql://catalog:0000@localhost/catalog')
 
 """make the above engine associated with Session objects."""
 Session = sessionmaker(bind=engine)
