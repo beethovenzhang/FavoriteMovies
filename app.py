@@ -22,8 +22,7 @@ app = Flask(__name__)
 CLIENT_ID = json.loads(
     open('/var/www/catalog/catalog/client_secrets.json', 'r').read())['web']['client_id']
 # Create a new class engine instance.
-engine = create_engine('postgresql://catalog:0000@localhost/catalog',
-                       connect_args={'check_same_thread': False})
+engine = create_engine('postgresql://catalog:0000@localhost/catalog')
 # Make the above engine associated with Session objects.
 Session = sessionmaker(bind=engine)
 # Create a new Session class object.
